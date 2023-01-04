@@ -1,1 +1,2 @@
-# GitHub-Mini-Challenge
+# GitHub Mini Challenge
+
