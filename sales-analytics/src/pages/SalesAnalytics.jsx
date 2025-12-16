@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   DollarSign,
   TrendingUp,
   ArrowUp,
   ArrowDown,
-  Package
+  Package,
+  ShoppingBag,
+  Filter
 } from 'lucide-react';
 import KPICard from '../components/ui/KPICard';
-import FilterBar from '../components/ui/FilterBar';
 import SalesLineChart from '../components/charts/SalesLineChart';
 import BarChart from '../components/charts/BarChart';
 import DataTable from '../components/ui/DataTable';
@@ -17,11 +18,13 @@ import {
   dailySalesData,
   salesByCategory,
   branchRevenue,
-  productPerformance
+  productPerformance,
+  categorySalesData
 } from '../data/mockData';
 
 const SalesAnalytics = () => {
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [dateRange, setDateRange] = useState('last30days');
 
   useEffect(() => {
@@ -29,21 +32,31 @@ const SalesAnalytics = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const branches = [
-    { value: 'main', label: 'Main Branch - Riyadh' },
-    { value: 'mall', label: 'Mall Branch' },
-    { value: 'airport', label: 'Airport Branch' },
-    { value: 'university', label: 'University Branch' }
-  ];
+  const categories = ['all', 'Meals', 'Beverages', 'Desserts', 'Appetizers', 'Sides', 'Specials'];
 
-  const categories = [
-    'Meals',
-    'Beverages',
-    'Desserts',
-    'Appetizers',
-    'Sides',
-    'Specials'
-  ];
+  // Filter data based on selected category
+  const filteredData = useMemo(() => {
+    if (selectedCategory === 'all') {
+      return {
+        revenue: dashboardKPIs.totalRevenue,
+        orders: dashboardKPIs.totalOrders,
+        avgOrderValue: dashboardKPIs.avgOrderValue,
+        growth: dashboardKPIs.trends.revenueChange,
+        dailySales: dailySalesData,
+        products: productPerformance
+      };
+    }
+
+    const categoryData = categorySalesData[selectedCategory];
+    return {
+      revenue: categoryData.totalRevenue,
+      orders: categoryData.totalOrders,
+      avgOrderValue: categoryData.avgOrderValue,
+      growth: categoryData.growth,
+      dailySales: categoryData.dailySales,
+      products: productPerformance.filter(p => p.category === selectedCategory)
+    };
+  }, [selectedCategory]);
 
   const productColumns = [
     { key: 'name', label: 'Product Name' },
@@ -89,50 +102,81 @@ const SalesAnalytics = () => {
     }
   ];
 
-  // Prepare branch revenue data for bar chart
   const branchRevenueData = branchRevenue.map(b => ({
     name: b.name.split(' - ')[0].split(' ')[0],
     value: b.revenue
   }));
 
-  // Prepare category revenue data for bar chart
   const categoryRevenueData = salesByCategory.map(c => ({
     name: c.name,
     value: c.value
   }));
 
-  const handleExport = () => {
-    alert('Exporting sales data...');
-  };
-
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Filter Bar */}
-      <FilterBar
-        onDateRangeChange={setDateRange}
-        onExport={handleExport}
-        branches={branches}
-        categories={categories}
-      />
+      {/* Category Filter Section */}
+      <div className="card dark:bg-gray-800 dark:border-gray-700">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <Filter className="w-5 h-5 text-gray-400" />
+            <h3 className="font-semibold text-gray-900 dark:text-white">Filter by Category</h3>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  selectedCategory === cat
+                    ? 'bg-primary-600 text-white shadow-md'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
+              >
+                {cat === 'all' ? 'All Categories' : cat}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Selected Category Info */}
+      {selectedCategory !== 'all' && (
+        <div className="card dark:bg-gray-800 dark:border-gray-700 bg-gradient-to-r from-primary-50 to-white dark:from-primary-900/20 dark:to-gray-800 border-primary-200 dark:border-primary-800">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-xl">
+              <ShoppingBag className="w-6 h-6 text-primary-600 dark:text-primary-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                {selectedCategory} Category Analysis
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Top Item: <span className="font-medium text-primary-600 dark:text-primary-400">
+                  {categorySalesData[selectedCategory]?.topItem}
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         <KPICard
-          title="Total Revenue"
-          value={dashboardKPIs.totalRevenue}
+          title={selectedCategory === 'all' ? 'Total Revenue' : `${selectedCategory} Revenue`}
+          value={filteredData.revenue}
           icon={DollarSign}
           suffix=" SAR"
-          trend="up"
-          trendValue={12.5}
+          trend={filteredData.growth >= 0 ? 'up' : 'down'}
+          trendValue={Math.abs(filteredData.growth)}
           iconBgColor="bg-success-100"
           iconColor="text-success-600"
           loading={loading}
         />
         <KPICard
-          title="Average Daily Sales"
-          value={Math.round(dashboardKPIs.totalRevenue / 30)}
-          icon={TrendingUp}
-          suffix=" SAR"
+          title="Total Orders"
+          value={filteredData.orders}
+          icon={Package}
           trend="up"
           trendValue={8.3}
           iconBgColor="bg-primary-100"
@@ -140,33 +184,34 @@ const SalesAnalytics = () => {
           loading={loading}
         />
         <KPICard
-          title="Total Products Sold"
-          value={8234}
-          icon={Package}
+          title="Avg Order Value"
+          value={filteredData.avgOrderValue}
+          icon={TrendingUp}
+          suffix=" SAR"
           trend="up"
-          trendValue={15.2}
+          trendValue={5.2}
           iconBgColor="bg-warning-100"
           iconColor="text-warning-600"
           loading={loading}
         />
         <KPICard
-          title="Revenue Growth"
-          value={12.5}
+          title="Growth Rate"
+          value={filteredData.growth}
           icon={TrendingUp}
           suffix="%"
-          trend="up"
-          trendValue={3.2}
-          comparisonText="vs last period"
+          trend={filteredData.growth >= 0 ? 'up' : 'down'}
+          trendValue={Math.abs(filteredData.growth)}
+          comparisonText="vs last month"
           iconBgColor="bg-accent-100"
           iconColor="text-accent-600"
           loading={loading}
         />
       </div>
 
-      {/* Sales Trend */}
+      {/* Sales Trend Chart */}
       <SalesLineChart
-        data={dailySalesData}
-        title="Sales Trends"
+        data={filteredData.dailySales}
+        title={selectedCategory === 'all' ? 'Sales Trends (All Categories)' : `${selectedCategory} Sales Trends`}
         loading={loading}
         height={400}
       />
@@ -229,11 +274,12 @@ const SalesAnalytics = () => {
 
       {/* Product Performance Table */}
       <DataTable
-        data={productPerformance}
+        data={filteredData.products}
         columns={productColumns}
-        title="Product Performance"
+        title={selectedCategory === 'all' ? 'All Products Performance' : `${selectedCategory} Products`}
         pageSize={10}
         loading={loading}
+        emptyMessage={`No products found in ${selectedCategory} category`}
       />
     </div>
   );

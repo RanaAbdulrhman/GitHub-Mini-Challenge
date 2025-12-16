@@ -317,3 +317,198 @@ export const recommendations = {
     'Replace with trending items'
   ]
 };
+
+// Weather Data for Forecasting
+const weatherConditions = ['Sunny', 'Cloudy', 'Rainy', 'Hot', 'Mild', 'Windy'];
+const weatherIcons = {
+  'Sunny': '☀️',
+  'Cloudy': '☁️',
+  'Rainy': '🌧️',
+  'Hot': '🔥',
+  'Mild': '🌤️',
+  'Windy': '💨'
+};
+
+// Generate weather data with sales impact
+const generateWeatherData = () => {
+  const data = [];
+  const today = new Date();
+
+  // Historical weather (past 30 days)
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+
+    // Random weather with seasonal bias
+    const month = date.getMonth();
+    let weather;
+    if (month >= 5 && month <= 8) {
+      weather = Math.random() > 0.3 ? 'Hot' : (Math.random() > 0.5 ? 'Sunny' : 'Mild');
+    } else if (month >= 11 || month <= 1) {
+      weather = Math.random() > 0.4 ? 'Mild' : (Math.random() > 0.5 ? 'Rainy' : 'Cloudy');
+    } else {
+      weather = weatherConditions[Math.floor(Math.random() * weatherConditions.length)];
+    }
+
+    const temp = weather === 'Hot' ? 38 + Math.floor(Math.random() * 8) :
+                 weather === 'Sunny' ? 30 + Math.floor(Math.random() * 6) :
+                 weather === 'Mild' ? 22 + Math.floor(Math.random() * 6) :
+                 weather === 'Rainy' ? 18 + Math.floor(Math.random() * 5) :
+                 weather === 'Cloudy' ? 20 + Math.floor(Math.random() * 8) :
+                 25 + Math.floor(Math.random() * 5);
+
+    // Weather impact on sales
+    const weatherImpact = weather === 'Hot' ? -15 : // Hot weather reduces dine-in
+                          weather === 'Rainy' ? -20 : // Rainy reduces foot traffic
+                          weather === 'Sunny' ? 10 : // Good weather boosts sales
+                          weather === 'Mild' ? 15 : // Perfect weather
+                          0;
+
+    data.push({
+      date: date.toISOString().split('T')[0],
+      displayDate: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      weather: weather,
+      icon: weatherIcons[weather],
+      temperature: temp,
+      humidity: 30 + Math.floor(Math.random() * 50),
+      salesImpact: weatherImpact,
+      type: 'historical'
+    });
+  }
+
+  // Forecast weather (next 14 days)
+  for (let i = 1; i <= 14; i++) {
+    const date = new Date(today);
+    date.setDate(date.getDate() + i);
+
+    const month = date.getMonth();
+    let weather;
+    if (month >= 5 && month <= 8) {
+      weather = Math.random() > 0.3 ? 'Hot' : (Math.random() > 0.5 ? 'Sunny' : 'Mild');
+    } else {
+      weather = Math.random() > 0.5 ? 'Mild' : (Math.random() > 0.5 ? 'Sunny' : 'Cloudy');
+    }
+
+    const temp = weather === 'Hot' ? 38 + Math.floor(Math.random() * 8) :
+                 weather === 'Sunny' ? 30 + Math.floor(Math.random() * 6) :
+                 weather === 'Mild' ? 22 + Math.floor(Math.random() * 6) :
+                 weather === 'Rainy' ? 18 + Math.floor(Math.random() * 5) :
+                 weather === 'Cloudy' ? 20 + Math.floor(Math.random() * 8) :
+                 25 + Math.floor(Math.random() * 5);
+
+    const weatherImpact = weather === 'Hot' ? -15 :
+                          weather === 'Rainy' ? -20 :
+                          weather === 'Sunny' ? 10 :
+                          weather === 'Mild' ? 15 :
+                          0;
+
+    data.push({
+      date: date.toISOString().split('T')[0],
+      displayDate: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      weather: weather,
+      icon: weatherIcons[weather],
+      temperature: temp,
+      humidity: 30 + Math.floor(Math.random() * 50),
+      salesImpact: weatherImpact,
+      type: 'forecast'
+    });
+  }
+
+  return data;
+};
+
+export const weatherData = generateWeatherData();
+
+// Weather Impact Summary
+export const weatherImpactSummary = {
+  bestWeather: 'Mild',
+  bestWeatherSalesBoost: '+15%',
+  worstWeather: 'Rainy',
+  worstWeatherSalesImpact: '-20%',
+  hotWeatherTip: 'Promote cold beverages and delivery options',
+  rainyWeatherTip: 'Focus on delivery promotions and comfort food',
+  insights: [
+    { weather: 'Hot (35°C+)', impact: '-15%', recommendation: 'Promote cold drinks, ice cream, delivery' },
+    { weather: 'Rainy', impact: '-20%', recommendation: 'Push delivery, comfort food specials' },
+    { weather: 'Sunny', impact: '+10%', recommendation: 'Outdoor seating, fresh salads' },
+    { weather: 'Mild (22-28°C)', impact: '+15%', recommendation: 'Full menu promotion, dine-in focus' },
+    { weather: 'Cloudy', impact: '0%', recommendation: 'Standard operations' },
+    { weather: 'Windy', impact: '-5%', recommendation: 'Indoor seating priority' }
+  ]
+};
+
+// Category Sales Data (for filtering)
+export const categorySalesData = {
+  'Meals': {
+    totalRevenue: 52350,
+    totalOrders: 1245,
+    avgOrderValue: 42.05,
+    topItem: 'Shawarma Plate',
+    growth: 14.2,
+    dailySales: dailySalesData.map(d => ({
+      ...d,
+      sales: Math.round(d.sales * 0.36),
+      orders: Math.round(d.orders * 0.35)
+    }))
+  },
+  'Beverages': {
+    totalRevenue: 29045,
+    totalOrders: 2890,
+    avgOrderValue: 10.05,
+    topItem: 'Arabic Coffee',
+    growth: 8.5,
+    dailySales: dailySalesData.map(d => ({
+      ...d,
+      sales: Math.round(d.sales * 0.20),
+      orders: Math.round(d.orders * 0.40)
+    }))
+  },
+  'Desserts': {
+    totalRevenue: 21785,
+    totalOrders: 678,
+    avgOrderValue: 32.13,
+    topItem: 'Kunafa',
+    growth: 18.3,
+    dailySales: dailySalesData.map(d => ({
+      ...d,
+      sales: Math.round(d.sales * 0.15),
+      orders: Math.round(d.orders * 0.12)
+    }))
+  },
+  'Appetizers': {
+    totalRevenue: 18920,
+    totalOrders: 890,
+    avgOrderValue: 21.26,
+    topItem: 'Hummus',
+    growth: 5.7,
+    dailySales: dailySalesData.map(d => ({
+      ...d,
+      sales: Math.round(d.sales * 0.13),
+      orders: Math.round(d.orders * 0.15)
+    }))
+  },
+  'Sides': {
+    totalRevenue: 14518,
+    totalOrders: 1456,
+    avgOrderValue: 9.97,
+    topItem: 'French Fries',
+    growth: -2.1,
+    dailySales: dailySalesData.map(d => ({
+      ...d,
+      sales: Math.round(d.sales * 0.10),
+      orders: Math.round(d.orders * 0.20)
+    }))
+  },
+  'Specials': {
+    totalRevenue: 8612,
+    totalOrders: 145,
+    avgOrderValue: 59.39,
+    topItem: 'Lobster Thermidor',
+    growth: 22.8,
+    dailySales: dailySalesData.map(d => ({
+      ...d,
+      sales: Math.round(d.sales * 0.06),
+      orders: Math.round(d.orders * 0.03)
+    }))
+  }
+};

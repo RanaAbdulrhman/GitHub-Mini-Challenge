@@ -8,23 +8,30 @@ import {
   ChevronDown,
   ChevronUp,
   Zap,
-  AlertCircle
+  AlertCircle,
+  Cloud,
+  Thermometer,
+  Droplets
 } from 'lucide-react';
 import KPICard from '../components/ui/KPICard';
 import ForecastChart from '../components/charts/ForecastChart';
 import DataTable from '../components/ui/DataTable';
 import Badge from '../components/ui/Badge';
-import { forecastData, forecastSummary } from '../data/mockData';
+import { forecastData, forecastSummary, weatherData, weatherImpactSummary } from '../data/mockData';
 
 const Forecasting = () => {
   const [loading, setLoading] = useState(true);
   const [forecastPeriod, setForecastPeriod] = useState('30');
   const [showModelInfo, setShowModelInfo] = useState(false);
+  const [showWeatherInfo, setShowWeatherInfo] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  // Get forecast weather data
+  const forecastWeather = weatherData.filter(w => w.type === 'forecast');
 
   const forecastColumns = [
     {
@@ -111,6 +118,73 @@ const Forecasting = () => {
         </div>
       </div>
 
+      {/* Weather Forecast Section */}
+      <div className="card dark:bg-gray-800 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-blue-200 dark:border-blue-800">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Cloud className="w-5 h-5 text-blue-500" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Weather-Based Forecast</h3>
+          </div>
+          <button
+            onClick={() => setShowWeatherInfo(!showWeatherInfo)}
+            className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            {showWeatherInfo ? 'Hide Details' : 'Show Details'}
+          </button>
+        </div>
+
+        {/* Weather Cards - Next 7 Days */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 mb-4">
+          {forecastWeather.slice(0, 7).map((day, idx) => (
+            <div
+              key={day.date}
+              className={`p-3 rounded-xl text-center transition-all ${
+                idx === 0
+                  ? 'bg-white dark:bg-gray-700 shadow-md ring-2 ring-primary-500'
+                  : 'bg-white/50 dark:bg-gray-700/50'
+              }`}
+            >
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                {idx === 0 ? 'Tomorrow' : day.displayDate}
+              </p>
+              <p className="text-2xl mb-1">{day.icon}</p>
+              <p className="text-sm font-medium text-gray-900 dark:text-white">{day.weather}</p>
+              <div className="flex items-center justify-center gap-1 mt-1">
+                <Thermometer className="w-3 h-3 text-orange-500" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">{day.temperature}°C</span>
+              </div>
+              <p className={`text-xs font-medium mt-1 ${
+                day.salesImpact > 0 ? 'text-success-600' : day.salesImpact < 0 ? 'text-danger-600' : 'text-gray-500'
+              }`}>
+                {day.salesImpact > 0 ? '+' : ''}{day.salesImpact}% sales
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {showWeatherInfo && (
+          <div className="mt-4 pt-4 border-t border-blue-200 dark:border-blue-800">
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Weather Impact on Sales</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {weatherImpactSummary.insights.map((insight, idx) => (
+                <div key={idx} className="p-3 bg-white dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-gray-900 dark:text-white">{insight.weather}</span>
+                    <span className={`text-sm font-bold ${
+                      insight.impact.startsWith('+') ? 'text-success-600' :
+                      insight.impact.startsWith('-') ? 'text-danger-600' : 'text-gray-500'
+                    }`}>
+                      {insight.impact}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{insight.recommendation}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Forecast Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         <KPICard
@@ -181,30 +255,36 @@ const Forecasting = () => {
             Peak Demand Days
           </h3>
           <div className="space-y-3">
-            {peakDays.map((day, idx) => (
-              <div
-                key={day.date}
-                className="flex items-center justify-between p-3 bg-success-50 dark:bg-success-900/20 rounded-lg border border-success-200 dark:border-success-800"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-success-500 text-white flex items-center justify-center text-sm font-bold">
-                    {idx + 1}
+            {peakDays.map((day, idx) => {
+              const weatherForDay = forecastWeather.find(w => w.date === day.date);
+              return (
+                <div
+                  key={day.date}
+                  className="flex items-center justify-between p-3 bg-success-50 dark:bg-success-900/20 rounded-lg border border-success-200 dark:border-success-800"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-success-500 text-white flex items-center justify-center text-sm font-bold">
+                      {idx + 1}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">{day.displayDate}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{day.dayName}</p>
+                    </div>
+                    {weatherForDay && (
+                      <span className="text-lg" title={weatherForDay.weather}>{weatherForDay.icon}</span>
+                    )}
                   </div>
-                  <div>
-                    <p className="font-medium text-gray-900 dark:text-white">{day.displayDate}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{day.dayName}</p>
+                  <div className="text-right">
+                    <p className="font-bold text-success-600 dark:text-success-400">
+                      {day.predicted.toLocaleString()} SAR
+                    </p>
+                    {day.notes && (
+                      <p className="text-xs text-warning-600 dark:text-warning-400">{day.notes}</p>
+                    )}
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-bold text-success-600 dark:text-success-400">
-                    {day.predicted.toLocaleString()} SAR
-                  </p>
-                  {day.notes && (
-                    <p className="text-xs text-warning-600 dark:text-warning-400">{day.notes}</p>
-                  )}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -220,27 +300,33 @@ const Forecasting = () => {
             Low Demand Days
           </h3>
           <div className="space-y-3">
-            {lowDays.map((day, idx) => (
-              <div
-                key={day.date}
-                className="flex items-center justify-between p-3 bg-warning-50 dark:bg-warning-900/20 rounded-lg border border-warning-200 dark:border-warning-800"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-warning-500 text-white flex items-center justify-center text-sm font-bold">
-                    {idx + 1}
+            {lowDays.map((day, idx) => {
+              const weatherForDay = forecastWeather.find(w => w.date === day.date);
+              return (
+                <div
+                  key={day.date}
+                  className="flex items-center justify-between p-3 bg-warning-50 dark:bg-warning-900/20 rounded-lg border border-warning-200 dark:border-warning-800"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-warning-500 text-white flex items-center justify-center text-sm font-bold">
+                      {idx + 1}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">{day.displayDate}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{day.dayName}</p>
+                    </div>
+                    {weatherForDay && (
+                      <span className="text-lg" title={weatherForDay.weather}>{weatherForDay.icon}</span>
+                    )}
                   </div>
-                  <div>
-                    <p className="font-medium text-gray-900 dark:text-white">{day.displayDate}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{day.dayName}</p>
+                  <div className="text-right">
+                    <p className="font-bold text-warning-600 dark:text-warning-400">
+                      {day.predicted.toLocaleString()} SAR
+                    </p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-bold text-warning-600 dark:text-warning-400">
-                    {day.predicted.toLocaleString()} SAR
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -285,6 +371,7 @@ const Forecasting = () => {
                   {forecastSummary.modelsUsed.map(model => (
                     <Badge key={model} variant="primary">{model}</Badge>
                   ))}
+                  <Badge variant="info">Weather API</Badge>
                 </div>
               </div>
               <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
@@ -317,6 +404,10 @@ const Forecasting = () => {
                 <li className="flex items-start gap-2">
                   <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0"></span>
                   <strong>LSTM Networks:</strong> Deep learning model that captures complex temporal patterns and long-term dependencies in sales data.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0"></span>
+                  <strong>Weather Integration:</strong> Incorporates weather forecast data to adjust predictions based on temperature, conditions, and their historical impact on sales.
                 </li>
               </ul>
             </div>
