@@ -9,21 +9,48 @@ import {
   ChevronUp,
   Zap,
   AlertCircle,
-  Cloud,
-  Thermometer,
-  Droplets
+  Coffee,
+  IceCream,
+  Cake,
+  Thermometer
 } from 'lucide-react';
 import KPICard from '../components/ui/KPICard';
 import ForecastChart from '../components/charts/ForecastChart';
 import DataTable from '../components/ui/DataTable';
 import Badge from '../components/ui/Badge';
-import { forecastData, forecastSummary, weatherData, weatherImpactSummary } from '../data/mockData';
+import { forecastData, forecastSummary, weatherData } from '../data/mockData';
+
+// Category weather impact predictions
+const getCategoryWeatherImpact = (weather, temperature) => {
+  const impacts = [];
+
+  if (weather === 'Hot' || temperature >= 35) {
+    impacts.push({ category: 'Drinks', item: 'Iced Latte', change: +35, icon: '🧊' });
+    impacts.push({ category: 'Drinks', item: 'Lemonade', change: +40, icon: '🍋' });
+    impacts.push({ category: 'Sweets', item: 'Ice Cream Scoop', change: +50, icon: '🍨' });
+    impacts.push({ category: 'Drinks', item: 'Espresso', change: -20, icon: '☕' });
+  } else if (weather === 'Rainy' || weather === 'Cloudy') {
+    impacts.push({ category: 'Drinks', item: 'Spanish Latte', change: +25, icon: '☕' });
+    impacts.push({ category: 'Drinks', item: 'Hot Chocolate', change: +30, icon: '🍫' });
+    impacts.push({ category: 'Sweets', item: 'Tiramisu', change: +15, icon: '🍰' });
+    impacts.push({ category: 'Drinks', item: 'Iced Tea', change: -25, icon: '🧊' });
+  } else if (weather === 'Mild' || (temperature >= 20 && temperature <= 28)) {
+    impacts.push({ category: 'Drinks', item: 'Cappuccino', change: +20, icon: '☕' });
+    impacts.push({ category: 'Pastries', item: 'Chocolate Croissant', change: +15, icon: '🥐' });
+    impacts.push({ category: 'Cakes', item: 'Pistachio Cake', change: +10, icon: '🎂' });
+  } else if (weather === 'Sunny') {
+    impacts.push({ category: 'Drinks', item: 'Iced Latte', change: +20, icon: '🧊' });
+    impacts.push({ category: 'Sweets', item: 'Fruit Tart', change: +25, icon: '🍓' });
+    impacts.push({ category: 'Drinks', item: 'Lemonade', change: +30, icon: '🍋' });
+  }
+
+  return impacts;
+};
 
 const Forecasting = () => {
   const [loading, setLoading] = useState(true);
   const [forecastPeriod, setForecastPeriod] = useState('30');
   const [showModelInfo, setShowModelInfo] = useState(false);
-  const [showWeatherInfo, setShowWeatherInfo] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -32,6 +59,8 @@ const Forecasting = () => {
 
   // Get forecast weather data
   const forecastWeather = weatherData.filter(w => w.type === 'forecast');
+  const tomorrowWeather = forecastWeather[0];
+  const categoryImpacts = tomorrowWeather ? getCategoryWeatherImpact(tomorrowWeather.weather, tomorrowWeather.temperature) : [];
 
   const forecastColumns = [
     {
@@ -118,73 +147,6 @@ const Forecasting = () => {
         </div>
       </div>
 
-      {/* Weather Forecast Section */}
-      <div className="card dark:bg-gray-800 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-blue-200 dark:border-blue-800">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Cloud className="w-5 h-5 text-blue-500" />
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Weather-Based Forecast</h3>
-          </div>
-          <button
-            onClick={() => setShowWeatherInfo(!showWeatherInfo)}
-            className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
-          >
-            {showWeatherInfo ? 'Hide Details' : 'Show Details'}
-          </button>
-        </div>
-
-        {/* Weather Cards - Next 7 Days */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 mb-4">
-          {forecastWeather.slice(0, 7).map((day, idx) => (
-            <div
-              key={day.date}
-              className={`p-3 rounded-xl text-center transition-all ${
-                idx === 0
-                  ? 'bg-white dark:bg-gray-700 shadow-md ring-2 ring-primary-500'
-                  : 'bg-white/50 dark:bg-gray-700/50'
-              }`}
-            >
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                {idx === 0 ? 'Tomorrow' : day.displayDate}
-              </p>
-              <p className="text-2xl mb-1">{day.icon}</p>
-              <p className="text-sm font-medium text-gray-900 dark:text-white">{day.weather}</p>
-              <div className="flex items-center justify-center gap-1 mt-1">
-                <Thermometer className="w-3 h-3 text-orange-500" />
-                <span className="text-xs text-gray-600 dark:text-gray-400">{day.temperature}°C</span>
-              </div>
-              <p className={`text-xs font-medium mt-1 ${
-                day.salesImpact > 0 ? 'text-success-600' : day.salesImpact < 0 ? 'text-danger-600' : 'text-gray-500'
-              }`}>
-                {day.salesImpact > 0 ? '+' : ''}{day.salesImpact}% sales
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {showWeatherInfo && (
-          <div className="mt-4 pt-4 border-t border-blue-200 dark:border-blue-800">
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Weather Impact on Sales</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {weatherImpactSummary.insights.map((insight, idx) => (
-                <div key={idx} className="p-3 bg-white dark:bg-gray-700 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-gray-900 dark:text-white">{insight.weather}</span>
-                    <span className={`text-sm font-bold ${
-                      insight.impact.startsWith('+') ? 'text-success-600' :
-                      insight.impact.startsWith('-') ? 'text-danger-600' : 'text-gray-500'
-                    }`}>
-                      {insight.impact}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{insight.recommendation}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
       {/* Forecast Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         <KPICard
@@ -236,6 +198,53 @@ const Forecasting = () => {
           loading={loading}
         />
       </div>
+
+      {/* Category Forecast Based on Weather - Tomorrow's Predictions */}
+      {tomorrowWeather && (
+        <div className="card dark:bg-gray-800 dark:border-gray-700">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Tomorrow's Category Forecast
+            </h3>
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+              <span className="text-2xl">{tomorrowWeather.icon}</span>
+              <span>{tomorrowWeather.weather}</span>
+              <Thermometer className="w-4 h-4 text-orange-500" />
+              <span>{tomorrowWeather.temperature}°C</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {categoryImpacts.map((impact, idx) => (
+              <div
+                key={idx}
+                className={`p-4 rounded-xl border ${
+                  impact.change > 0
+                    ? 'bg-success-50 dark:bg-success-900/20 border-success-200 dark:border-success-800'
+                    : 'bg-danger-50 dark:bg-danger-900/20 border-danger-200 dark:border-danger-800'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-2xl">{impact.icon}</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-white">{impact.item}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{impact.category}</p>
+                  </div>
+                </div>
+                <p className={`text-lg font-bold ${
+                  impact.change > 0 ? 'text-success-600' : 'text-danger-600'
+                }`}>
+                  {impact.change > 0 ? '+' : ''}{impact.change}% expected
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+            Based on weather conditions, adjust your inventory and promotions accordingly.
+          </p>
+        </div>
+      )}
 
       {/* Forecast Chart */}
       <ForecastChart
@@ -371,7 +380,6 @@ const Forecasting = () => {
                   {forecastSummary.modelsUsed.map(model => (
                     <Badge key={model} variant="primary">{model}</Badge>
                   ))}
-                  <Badge variant="info">Weather API</Badge>
                 </div>
               </div>
               <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
@@ -392,24 +400,6 @@ const Forecasting = () => {
                   {new Date(forecastSummary.lastUpdated).toLocaleString()}
                 </p>
               </div>
-            </div>
-
-            <div className="mt-4 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg border border-primary-200 dark:border-primary-800">
-              <h4 className="font-semibold text-primary-800 dark:text-primary-300 mb-2">About the Forecasting Models</h4>
-              <ul className="space-y-2 text-sm text-primary-700 dark:text-primary-400">
-                <li className="flex items-start gap-2">
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0"></span>
-                  <strong>Prophet (Facebook):</strong> Handles seasonality, holidays, and trend changes automatically. Excellent for daily/weekly patterns.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0"></span>
-                  <strong>LSTM Networks:</strong> Deep learning model that captures complex temporal patterns and long-term dependencies in sales data.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0"></span>
-                  <strong>Weather Integration:</strong> Incorporates weather forecast data to adjust predictions based on temperature, conditions, and their historical impact on sales.
-                </li>
-              </ul>
             </div>
           </div>
         )}
