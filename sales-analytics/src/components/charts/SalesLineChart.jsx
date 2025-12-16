@@ -14,18 +14,21 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
         <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">{label}</p>
-        {payload.map((entry, index) => (
-          <div key={index} className="flex items-center gap-2 text-sm">
-            <div
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: entry.color }}
-            ></div>
-            <span className="text-gray-600 dark:text-gray-400">{entry.name}:</span>
-            <span className="font-semibold text-gray-900 dark:text-white">
-              {entry.value.toLocaleString()} SAR
-            </span>
-          </div>
-        ))}
+        {payload.map((entry, index) => {
+          const isSales = entry.dataKey === 'sales';
+          return (
+            <div key={index} className="flex items-center gap-2 text-sm">
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: entry.color }}
+              ></div>
+              <span className="text-gray-600 dark:text-gray-400">{entry.name}:</span>
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {entry.value.toLocaleString()}{isSales ? ' SAR' : ''}
+              </span>
+            </div>
+          );
+        })}
       </div>
     );
   }

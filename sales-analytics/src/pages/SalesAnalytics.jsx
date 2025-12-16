@@ -32,7 +32,7 @@ const SalesAnalytics = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const categories = ['all', 'Meals', 'Beverages', 'Desserts', 'Appetizers', 'Sides', 'Specials'];
+  const categories = ['all', 'Sweets', 'Drinks', 'Pastries', 'Cakes', 'Specials'];
 
   // Filter data based on selected category
   const filteredData = useMemo(() => {

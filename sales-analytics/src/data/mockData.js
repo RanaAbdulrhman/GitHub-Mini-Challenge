@@ -47,12 +47,11 @@ export const dailySalesData = generateDailySales();
 
 // Sales by Category
 export const salesByCategory = [
-  { name: 'Meals', value: 52350, percentage: 36, color: '#0ea5e9' },
-  { name: 'Beverages', value: 29045, percentage: 20, color: '#22c55e' },
-  { name: 'Desserts', value: 21785, percentage: 15, color: '#f59e0b' },
-  { name: 'Appetizers', value: 18920, percentage: 13, color: '#8b5cf6' },
-  { name: 'Sides', value: 14518, percentage: 10, color: '#ec4899' },
-  { name: 'Specials', value: 8612, percentage: 6, color: '#14b8a6' }
+  { name: 'Sweets', value: 52350, percentage: 36, color: '#f59e0b' },
+  { name: 'Drinks', value: 45045, percentage: 31, color: '#0ea5e9' },
+  { name: 'Pastries', value: 21785, percentage: 15, color: '#ec4899' },
+  { name: 'Cakes', value: 18920, percentage: 13, color: '#8b5cf6' },
+  { name: 'Specials', value: 7130, percentage: 5, color: '#14b8a6' }
 ];
 
 // Order Types Distribution
@@ -64,20 +63,20 @@ export const orderTypes = [
 
 // Top Selling Products
 export const topProducts = [
-  { id: 1, name: 'Grilled Chicken Meal', category: 'Meals', sales: 456, revenue: 18240, growth: 12.5 },
-  { id: 2, name: 'Arabic Coffee', category: 'Beverages', sales: 892, revenue: 8920, growth: 8.3 },
-  { id: 3, name: 'Beef Burger Combo', category: 'Meals', sales: 378, revenue: 15120, growth: 15.2 },
-  { id: 4, name: 'Fresh Juice Mix', category: 'Beverages', sales: 654, revenue: 9810, growth: -3.4 },
-  { id: 5, name: 'Chocolate Cake', category: 'Desserts', sales: 298, revenue: 5960, growth: 22.1 }
+  { id: 1, name: 'Spanish Latte', category: 'Drinks', sales: 892, revenue: 17840, growth: 12.5 },
+  { id: 2, name: 'Tiramisu', category: 'Sweets', sales: 456, revenue: 13680, growth: 8.3 },
+  { id: 3, name: 'Caramel Mille Feuille', category: 'Sweets', sales: 378, revenue: 11340, growth: 15.2 },
+  { id: 4, name: 'Espresso', category: 'Drinks', sales: 654, revenue: 9810, growth: -3.4 },
+  { id: 5, name: 'Raspberry Mille Feuille', category: 'Sweets', sales: 298, revenue: 8940, growth: 22.1 }
 ];
 
 // Bottom Performing Products
 export const bottomProducts = [
-  { id: 1, name: 'Garden Salad', category: 'Appetizers', sales: 45, revenue: 1125, growth: -18.5 },
-  { id: 2, name: 'Mint Tea', category: 'Beverages', sales: 67, revenue: 670, growth: -12.3 },
-  { id: 3, name: 'Veggie Wrap', category: 'Meals', sales: 34, revenue: 1020, growth: -25.4 },
-  { id: 4, name: 'Rice Pudding', category: 'Desserts', sales: 28, revenue: 560, growth: -8.7 },
-  { id: 5, name: 'Onion Rings', category: 'Sides', sales: 56, revenue: 560, growth: -5.2 }
+  { id: 1, name: 'Green Tea', category: 'Drinks', sales: 45, revenue: 1125, growth: -18.5 },
+  { id: 2, name: 'Vanilla Cupcake', category: 'Sweets', sales: 67, revenue: 1340, growth: -12.3 },
+  { id: 3, name: 'Butter Croissant', category: 'Sweets', sales: 34, revenue: 680, growth: -25.4 },
+  { id: 4, name: 'Hot Chocolate', category: 'Drinks', sales: 28, revenue: 560, growth: -8.7 },
+  { id: 5, name: 'Fruit Tart', category: 'Sweets', sales: 56, revenue: 1120, growth: -5.2 }
 ];
 
 // Peak Hours Heatmap Data
@@ -117,40 +116,38 @@ days.forEach((day, dayIndex) => {
 // Menu Engineering Data
 export const menuItems = [
   // Stars (High Popularity, High Profitability)
-  { id: 1, name: 'Grilled Chicken Meal', category: 'Meals', popularity: 456, profitability: 48, revenue: 18240, cost: 9485, classification: 'Star' },
-  { id: 2, name: 'Beef Burger Combo', category: 'Meals', popularity: 378, profitability: 45, revenue: 15120, cost: 8316, classification: 'Star' },
-  { id: 3, name: 'Arabic Coffee', category: 'Beverages', popularity: 892, profitability: 72, revenue: 8920, cost: 2498, classification: 'Star' },
-  { id: 4, name: 'Chocolate Cake', category: 'Desserts', popularity: 298, profitability: 55, revenue: 5960, cost: 2682, classification: 'Star' },
-  { id: 5, name: 'Shawarma Plate', category: 'Meals', popularity: 534, profitability: 52, revenue: 21360, cost: 10253, classification: 'Star' },
-  { id: 6, name: 'Mixed Grill', category: 'Meals', popularity: 289, profitability: 46, revenue: 17340, cost: 9364, classification: 'Star' },
-  { id: 7, name: 'Cappuccino', category: 'Beverages', popularity: 567, profitability: 68, revenue: 7938, cost: 2540, classification: 'Star' },
-  { id: 8, name: 'Kunafa', category: 'Desserts', popularity: 345, profitability: 58, revenue: 6900, cost: 2898, classification: 'Star' },
+  { id: 1, name: 'Spanish Latte', category: 'Drinks', popularity: 892, profitability: 72, revenue: 17840, cost: 4995, classification: 'Star' },
+  { id: 2, name: 'Tiramisu', category: 'Sweets', popularity: 456, profitability: 65, revenue: 13680, cost: 4788, classification: 'Star' },
+  { id: 3, name: 'Caramel Mille Feuille', category: 'Sweets', popularity: 378, profitability: 58, revenue: 11340, cost: 4763, classification: 'Star' },
+  { id: 4, name: 'Espresso', category: 'Drinks', popularity: 654, profitability: 75, revenue: 9810, cost: 2453, classification: 'Star' },
+  { id: 5, name: 'Raspberry Mille Feuille', category: 'Sweets', popularity: 345, profitability: 55, revenue: 10350, cost: 4658, classification: 'Star' },
+  { id: 6, name: 'Cappuccino', category: 'Drinks', popularity: 567, profitability: 68, revenue: 7938, cost: 2540, classification: 'Star' },
+  { id: 7, name: 'Tero Chocolate', category: 'Sweets', popularity: 534, profitability: 52, revenue: 16020, cost: 7690, classification: 'Star' },
+  { id: 8, name: 'Pistachio Cake', category: 'Cakes', popularity: 298, profitability: 55, revenue: 8940, cost: 4023, classification: 'Star' },
 
   // Puzzles (Low Popularity, High Profitability)
-  { id: 9, name: 'Lobster Thermidor', category: 'Specials', popularity: 45, profitability: 62, revenue: 4500, cost: 1710, classification: 'Puzzle' },
-  { id: 10, name: 'Truffle Pasta', category: 'Specials', popularity: 38, profitability: 58, revenue: 3420, cost: 1436, classification: 'Puzzle' },
-  { id: 11, name: 'Premium Steak', category: 'Meals', popularity: 67, profitability: 52, revenue: 8710, cost: 4181, classification: 'Puzzle' },
-  { id: 12, name: 'Seafood Platter', category: 'Specials', popularity: 52, profitability: 48, revenue: 5720, cost: 2974, classification: 'Puzzle' },
-  { id: 13, name: 'Tiramisu', category: 'Desserts', popularity: 89, profitability: 65, revenue: 2670, cost: 935, classification: 'Puzzle' },
+  { id: 9, name: 'Matcha Latte', category: 'Drinks', popularity: 45, profitability: 62, revenue: 1350, cost: 513, classification: 'Puzzle' },
+  { id: 10, name: 'Red Velvet Cake', category: 'Cakes', popularity: 38, profitability: 58, revenue: 1520, cost: 638, classification: 'Puzzle' },
+  { id: 11, name: 'Affogato', category: 'Drinks', popularity: 67, profitability: 70, revenue: 2010, cost: 603, classification: 'Puzzle' },
+  { id: 12, name: 'Chocolate Fondant', category: 'Sweets', popularity: 52, profitability: 60, revenue: 2080, cost: 832, classification: 'Puzzle' },
+  { id: 13, name: 'Lotus Cheesecake', category: 'Cakes', popularity: 89, profitability: 65, revenue: 3560, cost: 1246, classification: 'Puzzle' },
 
   // Plowhorses (High Popularity, Low Profitability)
-  { id: 14, name: 'French Fries', category: 'Sides', popularity: 678, profitability: 22, revenue: 6780, cost: 5289, classification: 'Plowhorse' },
-  { id: 15, name: 'Soft Drinks', category: 'Beverages', popularity: 1234, profitability: 18, revenue: 6170, cost: 5059, classification: 'Plowhorse' },
-  { id: 16, name: 'White Rice', category: 'Sides', popularity: 567, profitability: 15, revenue: 2835, cost: 2410, classification: 'Plowhorse' },
-  { id: 17, name: 'Hummus', category: 'Appetizers', popularity: 445, profitability: 25, revenue: 4450, cost: 3338, classification: 'Plowhorse' },
-  { id: 18, name: 'Pita Bread', category: 'Sides', popularity: 890, profitability: 12, revenue: 1780, cost: 1566, classification: 'Plowhorse' },
-  { id: 19, name: 'Chicken Wings', category: 'Appetizers', popularity: 389, profitability: 28, revenue: 5835, cost: 4201, classification: 'Plowhorse' },
-  { id: 20, name: 'Cola Float', category: 'Beverages', popularity: 234, profitability: 20, revenue: 2340, cost: 1872, classification: 'Plowhorse' },
-  { id: 21, name: 'Garlic Bread', category: 'Sides', popularity: 456, profitability: 18, revenue: 2280, cost: 1870, classification: 'Plowhorse' },
-  { id: 22, name: 'Caesar Salad', category: 'Appetizers', popularity: 312, profitability: 24, revenue: 4680, cost: 3557, classification: 'Plowhorse' },
-  { id: 23, name: 'Lemonade', category: 'Beverages', popularity: 567, profitability: 22, revenue: 3969, cost: 3096, classification: 'Plowhorse' },
-  { id: 24, name: 'Ice Cream Scoop', category: 'Desserts', popularity: 478, profitability: 19, revenue: 2390, cost: 1936, classification: 'Plowhorse' },
-  { id: 25, name: 'Coleslaw', category: 'Sides', popularity: 345, profitability: 16, revenue: 1035, cost: 869, classification: 'Plowhorse' },
+  { id: 14, name: 'Americano', category: 'Drinks', popularity: 678, profitability: 22, revenue: 6780, cost: 5289, classification: 'Plowhorse' },
+  { id: 15, name: 'Iced Tea', category: 'Drinks', popularity: 1234, profitability: 18, revenue: 6170, cost: 5059, classification: 'Plowhorse' },
+  { id: 16, name: 'Butter Croissant', category: 'Pastries', popularity: 567, profitability: 15, revenue: 2835, cost: 2410, classification: 'Plowhorse' },
+  { id: 17, name: 'Plain Donut', category: 'Sweets', popularity: 445, profitability: 25, revenue: 2225, cost: 1669, classification: 'Plowhorse' },
+  { id: 18, name: 'Chocolate Croissant', category: 'Pastries', popularity: 890, profitability: 20, revenue: 4450, cost: 3560, classification: 'Plowhorse' },
+  { id: 19, name: 'Blueberry Muffin', category: 'Pastries', popularity: 389, profitability: 28, revenue: 2334, cost: 1680, classification: 'Plowhorse' },
+  { id: 20, name: 'Iced Latte', category: 'Drinks', popularity: 456, profitability: 24, revenue: 5472, cost: 4159, classification: 'Plowhorse' },
+  { id: 21, name: 'Vanilla Cupcake', category: 'Sweets', popularity: 312, profitability: 22, revenue: 1872, cost: 1460, classification: 'Plowhorse' },
+  { id: 22, name: 'Lemonade', category: 'Drinks', popularity: 567, profitability: 22, revenue: 3969, cost: 3096, classification: 'Plowhorse' },
+  { id: 23, name: 'Ice Cream Scoop', category: 'Sweets', popularity: 478, profitability: 19, revenue: 2390, cost: 1936, classification: 'Plowhorse' },
 
   // Dogs (Low Popularity, Low Profitability)
-  { id: 26, name: 'Garden Salad', category: 'Appetizers', popularity: 45, profitability: 15, revenue: 1125, cost: 956, classification: 'Dog' },
-  { id: 27, name: 'Veggie Wrap', category: 'Meals', popularity: 34, profitability: 18, revenue: 1020, cost: 836, classification: 'Dog' },
-  { id: 28, name: 'Rice Pudding', category: 'Desserts', popularity: 28, profitability: 12, revenue: 560, cost: 493, classification: 'Dog' }
+  { id: 24, name: 'Green Tea', category: 'Drinks', popularity: 45, profitability: 15, revenue: 675, cost: 574, classification: 'Dog' },
+  { id: 25, name: 'Fruit Tart', category: 'Sweets', popularity: 34, profitability: 18, revenue: 1020, cost: 836, classification: 'Dog' },
+  { id: 26, name: 'Hot Chocolate', category: 'Drinks', popularity: 28, profitability: 12, revenue: 560, cost: 493, classification: 'Dog' }
 ];
 
 // Menu Engineering Summary
@@ -251,21 +248,21 @@ export const forecastSummary = {
 
 // Sales Analytics - Product Performance
 export const productPerformance = [
-  { id: 1, name: 'Grilled Chicken Meal', category: 'Meals', salesQty: 456, revenue: 18240, profitMargin: 48, growth: 12.5 },
-  { id: 2, name: 'Arabic Coffee', category: 'Beverages', salesQty: 892, revenue: 8920, profitMargin: 72, growth: 8.3 },
-  { id: 3, name: 'Beef Burger Combo', category: 'Meals', salesQty: 378, revenue: 15120, profitMargin: 45, growth: 15.2 },
-  { id: 4, name: 'Fresh Juice Mix', category: 'Beverages', salesQty: 654, revenue: 9810, profitMargin: 58, growth: -3.4 },
-  { id: 5, name: 'Chocolate Cake', category: 'Desserts', salesQty: 298, revenue: 5960, profitMargin: 55, growth: 22.1 },
-  { id: 6, name: 'Shawarma Plate', category: 'Meals', salesQty: 534, revenue: 21360, profitMargin: 52, growth: 18.7 },
-  { id: 7, name: 'Mixed Grill', category: 'Meals', salesQty: 289, revenue: 17340, profitMargin: 46, growth: 5.2 },
-  { id: 8, name: 'Cappuccino', category: 'Beverages', salesQty: 567, revenue: 7938, profitMargin: 68, growth: 11.8 },
-  { id: 9, name: 'French Fries', category: 'Sides', salesQty: 678, revenue: 6780, profitMargin: 22, growth: -1.2 },
-  { id: 10, name: 'Soft Drinks', category: 'Beverages', salesQty: 1234, revenue: 6170, profitMargin: 18, growth: 2.4 },
-  { id: 11, name: 'Hummus', category: 'Appetizers', salesQty: 445, revenue: 4450, profitMargin: 25, growth: 8.9 },
-  { id: 12, name: 'Kunafa', category: 'Desserts', salesQty: 345, revenue: 6900, profitMargin: 58, growth: 14.3 },
-  { id: 13, name: 'Chicken Wings', category: 'Appetizers', salesQty: 389, revenue: 5835, profitMargin: 28, growth: 6.7 },
-  { id: 14, name: 'Caesar Salad', category: 'Appetizers', salesQty: 312, revenue: 4680, profitMargin: 24, growth: -2.8 },
-  { id: 15, name: 'Lemonade', category: 'Beverages', salesQty: 567, revenue: 3969, profitMargin: 22, growth: 4.5 }
+  { id: 1, name: 'Spanish Latte', category: 'Drinks', salesQty: 892, revenue: 17840, profitMargin: 72, growth: 12.5 },
+  { id: 2, name: 'Tiramisu', category: 'Sweets', salesQty: 456, revenue: 13680, profitMargin: 65, growth: 8.3 },
+  { id: 3, name: 'Caramel Mille Feuille', category: 'Sweets', salesQty: 378, revenue: 11340, profitMargin: 58, growth: 15.2 },
+  { id: 4, name: 'Espresso', category: 'Drinks', salesQty: 654, revenue: 9810, profitMargin: 75, growth: -3.4 },
+  { id: 5, name: 'Raspberry Mille Feuille', category: 'Sweets', salesQty: 345, revenue: 10350, profitMargin: 55, growth: 22.1 },
+  { id: 6, name: 'Tero Chocolate', category: 'Sweets', salesQty: 534, revenue: 16020, profitMargin: 52, growth: 18.7 },
+  { id: 7, name: 'Cappuccino', category: 'Drinks', salesQty: 567, revenue: 7938, profitMargin: 68, growth: 11.8 },
+  { id: 8, name: 'Pistachio Cake', category: 'Cakes', salesQty: 298, revenue: 8940, profitMargin: 55, growth: 5.2 },
+  { id: 9, name: 'Americano', category: 'Drinks', salesQty: 678, revenue: 6780, profitMargin: 22, growth: -1.2 },
+  { id: 10, name: 'Iced Tea', category: 'Drinks', salesQty: 1234, revenue: 6170, profitMargin: 18, growth: 2.4 },
+  { id: 11, name: 'Butter Croissant', category: 'Pastries', salesQty: 567, revenue: 2835, profitMargin: 15, growth: 8.9 },
+  { id: 12, name: 'Lotus Cheesecake', category: 'Cakes', salesQty: 89, revenue: 3560, profitMargin: 65, growth: 14.3 },
+  { id: 13, name: 'Chocolate Croissant', category: 'Pastries', salesQty: 890, revenue: 4450, profitMargin: 20, growth: 6.7 },
+  { id: 14, name: 'Blueberry Muffin', category: 'Pastries', salesQty: 389, revenue: 2334, profitMargin: 28, growth: -2.8 },
+  { id: 15, name: 'Lemonade', category: 'Drinks', salesQty: 567, revenue: 3969, profitMargin: 22, growth: 4.5 }
 ];
 
 // Revenue by Branch
@@ -439,11 +436,11 @@ export const weatherImpactSummary = {
 
 // Category Sales Data (for filtering)
 export const categorySalesData = {
-  'Meals': {
+  'Sweets': {
     totalRevenue: 52350,
     totalOrders: 1245,
     avgOrderValue: 42.05,
-    topItem: 'Shawarma Plate',
+    topItem: 'Tiramisu',
     growth: 14.2,
     dailySales: dailySalesData.map(d => ({
       ...d,
@@ -451,63 +448,51 @@ export const categorySalesData = {
       orders: Math.round(d.orders * 0.35)
     }))
   },
-  'Beverages': {
-    totalRevenue: 29045,
+  'Drinks': {
+    totalRevenue: 45045,
     totalOrders: 2890,
-    avgOrderValue: 10.05,
-    topItem: 'Arabic Coffee',
+    avgOrderValue: 15.59,
+    topItem: 'Spanish Latte',
     growth: 8.5,
     dailySales: dailySalesData.map(d => ({
       ...d,
-      sales: Math.round(d.sales * 0.20),
+      sales: Math.round(d.sales * 0.31),
       orders: Math.round(d.orders * 0.40)
     }))
   },
-  'Desserts': {
+  'Pastries': {
     totalRevenue: 21785,
-    totalOrders: 678,
-    avgOrderValue: 32.13,
-    topItem: 'Kunafa',
+    totalOrders: 1846,
+    avgOrderValue: 11.80,
+    topItem: 'Chocolate Croissant',
     growth: 18.3,
     dailySales: dailySalesData.map(d => ({
       ...d,
       sales: Math.round(d.sales * 0.15),
-      orders: Math.round(d.orders * 0.12)
-    }))
-  },
-  'Appetizers': {
-    totalRevenue: 18920,
-    totalOrders: 890,
-    avgOrderValue: 21.26,
-    topItem: 'Hummus',
-    growth: 5.7,
-    dailySales: dailySalesData.map(d => ({
-      ...d,
-      sales: Math.round(d.sales * 0.13),
-      orders: Math.round(d.orders * 0.15)
-    }))
-  },
-  'Sides': {
-    totalRevenue: 14518,
-    totalOrders: 1456,
-    avgOrderValue: 9.97,
-    topItem: 'French Fries',
-    growth: -2.1,
-    dailySales: dailySalesData.map(d => ({
-      ...d,
-      sales: Math.round(d.sales * 0.10),
       orders: Math.round(d.orders * 0.20)
     }))
   },
+  'Cakes': {
+    totalRevenue: 18920,
+    totalOrders: 425,
+    avgOrderValue: 44.52,
+    topItem: 'Pistachio Cake',
+    growth: 12.7,
+    dailySales: dailySalesData.map(d => ({
+      ...d,
+      sales: Math.round(d.sales * 0.13),
+      orders: Math.round(d.orders * 0.08)
+    }))
+  },
   'Specials': {
-    totalRevenue: 8612,
+    totalRevenue: 7130,
     totalOrders: 145,
-    avgOrderValue: 59.39,
-    topItem: 'Lobster Thermidor',
+    avgOrderValue: 49.17,
+    topItem: 'Matcha Latte',
     growth: 22.8,
     dailySales: dailySalesData.map(d => ({
       ...d,
-      sales: Math.round(d.sales * 0.06),
+      sales: Math.round(d.sales * 0.05),
       orders: Math.round(d.orders * 0.03)
     }))
   }
