@@ -9,7 +9,7 @@ import {
   Filter
 } from 'lucide-react';
 import KPICard from '../components/ui/KPICard';
-import SalesLineChart from '../components/charts/SalesLineChart';
+import SalesAreaChart from '../components/charts/SalesAreaChart';
 import BarChart from '../components/charts/BarChart';
 import DataTable from '../components/ui/DataTable';
 import Badge from '../components/ui/Badge';
@@ -208,10 +208,10 @@ const SalesAnalytics = () => {
         />
       </div>
 
-      {/* Sales Trend Chart */}
-      <SalesLineChart
+      {/* Sales Trend Chart - Area Chart (different from Dashboard's line chart) */}
+      <SalesAreaChart
         data={filteredData.dailySales}
-        title={selectedCategory === 'all' ? 'Sales Trends (All Categories)' : `${selectedCategory} Sales Trends`}
+        title={selectedCategory === 'all' ? 'Revenue Overview (All Categories)' : `${selectedCategory} Revenue Overview`}
         loading={loading}
         height={400}
       />
