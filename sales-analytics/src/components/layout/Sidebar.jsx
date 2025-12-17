@@ -25,12 +25,6 @@ const Sidebar = ({ isOpen, onToggle }) => {
       roles: ['Admin', 'Manager', 'Cashier']
     },
     {
-      path: '/analytics',
-      icon: BarChart3,
-      label: 'Sales Analytics',
-      roles: ['Admin', 'Manager']
-    },
-    {
       path: '/menu-engineering',
       icon: Utensils,
       label: 'Menu Engineering',

@@ -4,7 +4,6 @@ import { ThemeProvider } from './context/ThemeContext';
 import MainLayout from './components/layout/MainLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import SalesAnalytics from './pages/SalesAnalytics';
 import MenuEngineering from './pages/MenuEngineering';
 import Forecasting from './pages/Forecasting';
 import Settings from './pages/Settings';
@@ -22,7 +21,6 @@ function App() {
             <Route path="/" element={<MainLayout />}>
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
-              <Route path="analytics" element={<SalesAnalytics />} />
               <Route path="menu-engineering" element={<MenuEngineering />} />
               <Route path="forecasting" element={<Forecasting />} />
               <Route path="settings" element={<Settings />} />

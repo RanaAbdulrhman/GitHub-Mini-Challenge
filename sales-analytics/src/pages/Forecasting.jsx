@@ -49,13 +49,39 @@ const getCategoryWeatherImpact = (weather, temperature) => {
 
 const Forecasting = () => {
   const [loading, setLoading] = useState(true);
-  const [forecastPeriod, setForecastPeriod] = useState('30');
   const [showModelInfo, setShowModelInfo] = useState(false);
+
+  // Date range state - default to today + 30 days
+  const today = new Date();
+  const defaultEndDate = new Date(today);
+  defaultEndDate.setDate(today.getDate() + 30);
+
+  const formatDate = (date) => date.toISOString().split('T')[0];
+
+  const [startDate, setStartDate] = useState(formatDate(today));
+  const [endDate, setEndDate] = useState(formatDate(defaultEndDate));
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  // Calculate days between dates for display
+  const calculateDays = () => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
+  // Filter forecast data based on date range
+  const filteredForecastData = forecastData.forecast.filter(item => {
+    const itemDate = new Date(item.date);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    return itemDate >= start && itemDate <= end;
+  });
 
   // Get forecast weather data
   const forecastWeather = weatherData.filter(w => w.type === 'forecast');
@@ -111,33 +137,55 @@ const Forecasting = () => {
     }
   ];
 
-  // Find peak and low days
-  const peakDays = [...forecastData.forecast]
+  // Find peak and low days from filtered data
+  const peakDays = [...filteredForecastData]
     .sort((a, b) => b.predicted - a.predicted)
     .slice(0, 3);
-  const lowDays = [...forecastData.forecast]
+  const lowDays = [...filteredForecastData]
     .sort((a, b) => a.predicted - b.predicted)
     .slice(0, 3);
 
+  // Calculate summary for filtered period
+  const filteredSummary = {
+    predictedRevenue: filteredForecastData.reduce((sum, d) => sum + d.predicted, 0),
+    avgDaily: filteredForecastData.length > 0
+      ? Math.round(filteredForecastData.reduce((sum, d) => sum + d.predicted, 0) / filteredForecastData.length)
+      : 0
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Configuration Panel */}
+      {/* Configuration Panel - Date Range Picker */}
       <div className="card dark:bg-gray-800 dark:border-gray-700">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-gray-400" />
-              <span className="text-sm text-gray-600 dark:text-gray-400">Forecast Period:</span>
-              <select
-                value={forecastPeriod}
-                onChange={(e) => setForecastPeriod(e.target.value)}
-                className="appearance-none bg-gray-100 dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 font-medium px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              >
-                <option value="7">Next 7 Days</option>
-                <option value="14">Next 14 Days</option>
-                <option value="30">Next 30 Days</option>
-                <option value="90">Next 90 Days</option>
-              </select>
+              <Calendar className="w-5 h-5 text-primary-500" />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Forecast Period:</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-600 dark:text-gray-400">Start:</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="bg-gray-100 dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 font-medium px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-600 dark:text-gray-400">End:</label>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  min={startDate}
+                  className="bg-gray-100 dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 font-medium px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+              </div>
+              <span className="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-sm font-medium rounded-full">
+                {calculateDays()} days
+              </span>
             </div>
           </div>
           <button className="btn-primary flex items-center gap-2">
@@ -151,24 +199,24 @@ const Forecasting = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         <KPICard
           title="Predicted Sales"
-          value={forecastSummary.predictedRevenue}
+          value={filteredSummary.predictedRevenue}
           icon={TrendingUp}
           suffix=" SAR"
           trend="up"
           trendValue={forecastSummary.expectedGrowth}
-          comparisonText="expected growth"
+          comparisonText={`${calculateDays()} day forecast`}
           iconBgColor="bg-primary-100"
           iconColor="text-primary-600"
           loading={loading}
         />
         <KPICard
-          title="Expected Growth"
-          value={forecastSummary.expectedGrowth}
+          title="Avg Daily Sales"
+          value={filteredSummary.avgDaily}
           icon={Target}
-          suffix="%"
+          suffix=" SAR"
           trend="up"
-          trendValue={2.3}
-          comparisonText="vs last period"
+          trendValue={5.2}
+          comparisonText="per day average"
           iconBgColor="bg-success-100"
           iconColor="text-success-600"
           loading={loading}
@@ -249,8 +297,8 @@ const Forecasting = () => {
       {/* Forecast Chart */}
       <ForecastChart
         historicalData={forecastData.historical.slice(-30)}
-        forecastData={forecastData.forecast}
-        title="Sales Forecast Visualization"
+        forecastData={filteredForecastData}
+        title={`Sales Forecast (${startDate} to ${endDate})`}
         loading={loading}
         height={450}
       />
@@ -347,11 +395,12 @@ const Forecasting = () => {
 
       {/* Daily Forecast Table */}
       <DataTable
-        data={forecastData.forecast}
+        data={filteredForecastData}
         columns={forecastColumns}
-        title="Daily Forecast Details"
+        title={`Daily Forecast Details (${filteredForecastData.length} days)`}
         pageSize={10}
         loading={loading}
+        emptyMessage="No forecast data available for the selected date range"
       />
 
       {/* Model Information */}
