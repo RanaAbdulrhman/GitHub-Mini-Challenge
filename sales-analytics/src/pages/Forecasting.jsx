@@ -35,13 +35,13 @@ const getProductWeatherImpact = (weather, temperature) => {
   } else if (weather === 'Rainy' || weather === 'Cloudy') {
     impacts.push({ category: 'Hot Drinks', item: 'Spanish Latte', change: +25, icon: '☕' });
     impacts.push({ category: 'Hot Drinks', item: 'Hot Chocolate', change: +30, icon: '🍫' });
-    impacts.push({ category: 'Hot Drinks', item: 'Cappuccino', change: +20, icon: '☕' });
     impacts.push({ category: 'Hot Drinks', item: 'Caramel Macchiato', change: +22, icon: '☕' });
+    impacts.push({ category: 'Hot Drinks', item: 'Flat White', change: +18, icon: '☕' });
   } else {
-    impacts.push({ category: 'Drinks', item: 'Cappuccino', change: +20, icon: '☕' });
     impacts.push({ category: 'Drinks', item: 'Iced Latte', change: +15, icon: '🧊' });
     impacts.push({ category: 'Drinks', item: 'Lemonade', change: +18, icon: '🍋' });
     impacts.push({ category: 'Drinks', item: 'Cold Brew', change: +12, icon: '☕' });
+    impacts.push({ category: 'Drinks', item: 'Spanish Latte', change: +14, icon: '☕' });
   }
 
   return impacts;
