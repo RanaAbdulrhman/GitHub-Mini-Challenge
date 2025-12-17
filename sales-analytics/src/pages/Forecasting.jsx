@@ -20,28 +20,28 @@ import DataTable from '../components/ui/DataTable';
 import Badge from '../components/ui/Badge';
 import { forecastData, forecastSummary, weatherData } from '../data/mockData';
 
-// Category weather impact predictions
-const getCategoryWeatherImpact = (weather, temperature) => {
+// Product weather impact predictions - Cold drinks for hot weather
+const getProductWeatherImpact = (weather, temperature) => {
   const impacts = [];
 
-  if (weather === 'Hot' || temperature >= 35) {
-    impacts.push({ category: 'Drinks', item: 'Iced Latte', change: +35, icon: '🧊' });
-    impacts.push({ category: 'Drinks', item: 'Lemonade', change: +40, icon: '🍋' });
-    impacts.push({ category: 'Sweets', item: 'Ice Cream Scoop', change: +50, icon: '🍨' });
-    impacts.push({ category: 'Drinks', item: 'Espresso', change: -20, icon: '☕' });
+  // Hot weather - recommend cold drinks
+  if (weather === 'Hot' || weather === 'Sunny' || temperature >= 30) {
+    impacts.push({ category: 'Cold Drinks', item: 'Iced Latte', change: +35, icon: '🧊' });
+    impacts.push({ category: 'Cold Drinks', item: 'Iced Americano', change: +30, icon: '🧊' });
+    impacts.push({ category: 'Cold Drinks', item: 'Lemonade', change: +45, icon: '🍋' });
+    impacts.push({ category: 'Cold Drinks', item: 'Iced Matcha', change: +40, icon: '🍵' });
+    impacts.push({ category: 'Cold Drinks', item: 'Cold Brew', change: +38, icon: '☕' });
+    impacts.push({ category: 'Cold Drinks', item: 'Iced Mocha', change: +32, icon: '🍫' });
   } else if (weather === 'Rainy' || weather === 'Cloudy') {
-    impacts.push({ category: 'Drinks', item: 'Spanish Latte', change: +25, icon: '☕' });
-    impacts.push({ category: 'Drinks', item: 'Hot Chocolate', change: +30, icon: '🍫' });
-    impacts.push({ category: 'Sweets', item: 'Tiramisu', change: +15, icon: '🍰' });
-    impacts.push({ category: 'Drinks', item: 'Iced Tea', change: -25, icon: '🧊' });
-  } else if (weather === 'Mild' || (temperature >= 20 && temperature <= 28)) {
+    impacts.push({ category: 'Hot Drinks', item: 'Spanish Latte', change: +25, icon: '☕' });
+    impacts.push({ category: 'Hot Drinks', item: 'Hot Chocolate', change: +30, icon: '🍫' });
+    impacts.push({ category: 'Hot Drinks', item: 'Cappuccino', change: +20, icon: '☕' });
+    impacts.push({ category: 'Hot Drinks', item: 'Caramel Macchiato', change: +22, icon: '☕' });
+  } else {
     impacts.push({ category: 'Drinks', item: 'Cappuccino', change: +20, icon: '☕' });
-    impacts.push({ category: 'Pastries', item: 'Chocolate Croissant', change: +15, icon: '🥐' });
-    impacts.push({ category: 'Cakes', item: 'Pistachio Cake', change: +10, icon: '🎂' });
-  } else if (weather === 'Sunny') {
-    impacts.push({ category: 'Drinks', item: 'Iced Latte', change: +20, icon: '🧊' });
-    impacts.push({ category: 'Sweets', item: 'Fruit Tart', change: +25, icon: '🍓' });
-    impacts.push({ category: 'Drinks', item: 'Lemonade', change: +30, icon: '🍋' });
+    impacts.push({ category: 'Drinks', item: 'Iced Latte', change: +15, icon: '🧊' });
+    impacts.push({ category: 'Drinks', item: 'Lemonade', change: +18, icon: '🍋' });
+    impacts.push({ category: 'Drinks', item: 'Cold Brew', change: +12, icon: '☕' });
   }
 
   return impacts;
@@ -51,10 +51,10 @@ const Forecasting = () => {
   const [loading, setLoading] = useState(true);
   const [showModelInfo, setShowModelInfo] = useState(false);
 
-  // Date range state - default to today + 30 days
+  // Date range state - default to today + 7 days
   const today = new Date();
   const defaultEndDate = new Date(today);
-  defaultEndDate.setDate(today.getDate() + 30);
+  defaultEndDate.setDate(today.getDate() + 7);
 
   const formatDate = (date) => date.toISOString().split('T')[0];
 
@@ -86,7 +86,7 @@ const Forecasting = () => {
   // Get forecast weather data
   const forecastWeather = weatherData.filter(w => w.type === 'forecast');
   const tomorrowWeather = forecastWeather[0];
-  const categoryImpacts = tomorrowWeather ? getCategoryWeatherImpact(tomorrowWeather.weather, tomorrowWeather.temperature) : [];
+  const productImpacts = tomorrowWeather ? getProductWeatherImpact(tomorrowWeather.weather, tomorrowWeather.temperature) : [];
 
   const forecastColumns = [
     {
@@ -247,12 +247,12 @@ const Forecasting = () => {
         />
       </div>
 
-      {/* Category Forecast Based on Weather - Tomorrow's Predictions */}
+      {/* Product Forecast Based on Weather */}
       {tomorrowWeather && (
         <div className="card dark:bg-gray-800 dark:border-gray-700">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Tomorrow's Category Forecast
+              Tomorrow's Product Forecast
             </h3>
             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
               <span className="text-2xl">{tomorrowWeather.icon}</span>
@@ -262,8 +262,8 @@ const Forecasting = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {categoryImpacts.map((impact, idx) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {productImpacts.map((impact, idx) => (
               <div
                 key={idx}
                 className={`p-4 rounded-xl border ${
